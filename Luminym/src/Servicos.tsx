@@ -118,13 +118,13 @@ function Servicos() {
   }, [pos, pausado]);
 
   return (
-    <section id="Servicos" className="py-10 md:py-20">
+    <section id="Servicos" className="scroll-mt-24 pt-20 pb-4 md:pt-28 md:pb-6">
       <div className="flex flex-col items-center justify-center text-center px-6 bg-[inherit]">
-        <h1 className="mb-0.8 p-1 font-['Open_Sans'] text-[1.75rem] leading-none font-semibold text-[#938e8b]">
+        <h1 className="mb-1 p-1 font-['Open_Sans'] text-[1.35rem] md:text-[1.75rem] leading-none font-semibold text-[#938e8b]">
           Nossos Serviços
         </h1>
 
-        <h2 className="font-['Open_Sans'] text-5xl font-bold text-[#232323] leading-[1.2]">
+        <h2 className="font-['Open_Sans'] text-[2.4rem] sm:text-5xl font-bold text-[#232323] leading-[1.15] sm:leading-[1.2]">
           Soluções completas
           <br />
           para a sua{" "}
@@ -138,18 +138,18 @@ function Servicos() {
           </span>
         </h2>
 
-        <h3 className="mt-3 font-['Open_Sans'] text-[1.0625rem] font-bold leading-[1.6] text-[#938e8b]">
-          <span className="block">Da identidade visual ao desenvolvimento, oferecemos</span>
-          <span className="block">soluções personalizadas para cada etapa da sua</span>
-          <span className="block">empresa digital</span>
+        <h3 className="mt-4 max-w-[21rem] md:max-w-none font-['Open_Sans'] text-[0.95rem] md:text-[1.0625rem] font-bold leading-[1.6] text-[#938e8b] text-balance">
+          <span className="md:block">Da identidade visual ao desenvolvimento, oferecemos </span>
+          <span className="md:block">soluções personalizadas para cada etapa da sua </span>
+          <span className="md:block">empresa digital</span>
         </h3>
       </div>
 
       <div
         onMouseEnter={() => setPausado(true)}
         onMouseLeave={() => setPausado(false)}
-        className="relative overflow-hidden
-                   h-[28rem] sm:h-[31rem] md:h-[35rem] lg:h-[39rem]
+        className="relative mt-8 md:mt-12 overflow-hidden
+                   h-[27rem] sm:h-[30rem] md:h-[34rem] lg:h-[38rem]
                    [--w:15rem] [--g:1rem]
                    sm:[--w:17rem]
                    md:[--w:19rem] md:[--g:1.5rem]
