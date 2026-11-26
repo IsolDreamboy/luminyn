@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Imagem = {
   src: string;
@@ -95,6 +95,64 @@ function Brilho({ className = "" }: { className?: string }) {
   );
 }
 
+const FONTES_MARCA = [
+  { className: "font-sans", tamanho: "1.1em" },
+  { className: "font-serif italic", tamanho: "1em" },
+  { className: "font-mono", tamanho: "1.11em" },
+];
+
+function Marca() {
+  const [atual, setAtual] = useState<number>(0);
+  const [escalas, setEscalas] = useState<number[]>([1, 1, 1]);
+  const refs = useRef<(HTMLSpanElement | null)[]>([]);
+
+  useEffect(() => {
+    const medir = () => {
+      const larguras = refs.current.map((el) => el?.offsetWidth ?? 0);
+      const maior = Math.max(...larguras);
+      setEscalas(larguras.map((l) => (l > 0 ? maior / l : 1)));
+    };
+    medir();
+    document.fonts?.ready.then(medir);
+    window.addEventListener("resize", medir);
+    return () => window.removeEventListener("resize", medir);
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => setAtual((p) => (p + 1) % FONTES_MARCA.length), 2000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <span className="inline-grid items-baseline align-baseline leading-none text-white select-none">
+      <span
+        aria-hidden="true"
+        className="relative z-0 col-start-1 row-start-1 -mt-[0.1em] top-[0.2em] h-[0.95em] right-[0.10em] rounded-[0.15em] bg-[#040514]"
+      />
+
+      {FONTES_MARCA.map((f, i) => (
+        <span
+          key={f.className}
+          ref={(el) => {
+            refs.current[i] = el;
+          }}
+          aria-hidden={i !== atual}
+          style={{
+            fontSize: f.tamanho,
+            transform: `scale(${escalas[i]})`,
+            transformOrigin: "0 50%",
+          }}
+          className={`relative z-10 col-start-1 row-start-1 justify-self-start whitespace-nowrap px-[0.3em] leading-[0] text-left
+                      transition-opacity duration-500 ${f.className} ${i === atual ? "opacity-100" : "opacity-0"}`}
+        >
+          marca.
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function Servicos() {
   const [pos, setPos] = useState<number>(0);
   const [pausado, setPausado] = useState<boolean>(false);
@@ -128,14 +186,7 @@ function Servicos() {
           Soluções completas
           <br />
           para a sua{" "}
-          <span className="inline-grid items-baseline align-baseline leading-none text-white select-none">
-            {/* caixa MARCA */}
-            <span aria-hidden="true" className="relative z-0 col-start-1 row-start-1 -mt-[0.1em] top-[0.2em] h-[0.95em] right-[0.10em] rounded-[0.15em] bg-[#040514]" />
-
-            <span style={{ fontSize: "1.1em" }} className="relative z-10 col-start-1 row-start-1 px-[0.3em] leading-[0] text-left font-sans -translate-y-[0.0em] opacity-0 animate-crossfade-1">marca.</span>
-            <span className="relative z-10 col-start-1 row-start-1 px-[0.3em] leading-[0] text-left font-serif italic translate-y-[0] opacity-0 animate-crossfade-2">marca.</span>
-            <span className="relative z-10 col-start-1 row-start-1 px-[0.3em] leading-[0] text-left font-mono text-[1.11em] -translate-y-[0.0em] opacity-0 animate-crossfade-3">marca.</span>
-          </span>
+          <Marca />
         </h2>
 
         <h3 className="mt-4 max-w-[21rem] md:max-w-none font-['Open_Sans'] text-[0.95rem] md:text-[1.0625rem] font-bold leading-[1.6] text-[#938e8b] text-balance">

@@ -1,141 +1,231 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Side = "left" | "right" | null;
+
+type Balao = {
+  lado: Exclude<Side, null>;
+  etiqueta: string;
+  icone: string;
+  titulo: string;
+  subtitulo: string;
+  paragrafos: string[];
+  setaMobile: string;
+  setaDesktop: string;
+};
+
+type Gato = {
+  img: string;
+  alt: string;
+  nome: string;
+  aciona: Exclude<Side, null>;
+  imgClasse: string;
+  giro: string;
+  giroHover: string;
+};
+
+const baloes: Balao[] = [
+  {
+    lado: "left",
+    etiqueta: "Design",
+    icone: "pincel.png",
+    titulo: "Design Web",
+    subtitulo: "A arte em cada pixel.",
+    paragrafos: [
+      "Criamos identidades visuais autorais, alinhadas ao posicionamento de cada marca e construídas a partir de escolhas visuais que expressam sua personalidade.",
+      "De logotipos a materiais digitais e impressos, cada detalhe compõe uma linguagem própria, consistente e reconhecível.",
+    ],
+    setaMobile: "top-full left-1/2 -mt-px h-4 w-8 -translate-x-1/2 [clip-path:polygon(0_0,100%_0,50%_100%)]",
+    setaDesktop: "left-full top-1/2 -ml-px h-8 w-4 -translate-y-1/2 [clip-path:polygon(0_0,100%_50%,0_100%)]",
+  },
+  {
+    lado: "right",
+    etiqueta: "Código",
+    icone: "",
+    titulo: "Desenvolvedor Web",
+    subtitulo: "Sites que realmente se destacam.",
+    paragrafos: [
+      "Transforme sua presença online com um site personalizado, pensado para as necessidades específicas do seu negócio.",
+      "Design responsivo e moderno, otimização para SEO, integração com redes sociais e suporte técnico contínuo.",
+    ],
+    setaMobile: "bottom-full left-1/2 -mb-px h-4 w-8 -translate-x-1/2 [clip-path:polygon(50%_0,100%_100%,0_100%)]",
+    setaDesktop: "right-full top-1/2 -mr-px h-8 w-4 -translate-y-1/2 [clip-path:polygon(100%_0,100%_100%,0_50%)]",
+  },
+];
+
+const gatos: Gato[] = [
+  {
+    img: "WhiteCat.png",
+    alt: "Gato branco da Luminyn Studio",
+    nome: "Código",
+    aciona: "right",
+    imgClasse: "scale-[1.07]",
+    giro: "rotate-3",
+    giroHover: "group-hover:rotate-3",
+  },
+  {
+    img: "white2.png",
+    alt: "Gato preto da Luminyn Studio",
+    nome: "Design",
+    aciona: "left",
+    imgClasse: "",
+    giro: "-rotate-3",
+    giroHover: "group-hover:-rotate-3",
+  },
+];
+
+function Brilho({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 100 100" aria-hidden="true" fill="currentColor" className={className}>
+      <path d="M50 0 C51.5 38 55 46 76 50 C55 54 51.5 62 50 100 C48.5 62 45 54 24 50 C45 46 48.5 38 50 0Z" />
+    </svg>
+  );
+}
+
+function ConteudoBalao({ balao, cheio }: { balao: Balao; cheio: boolean }) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-[2rem] bg-[#232440] shadow-xl ${cheio ? "h-full w-full" : "w-full"}`}
+    >
+      <Brilho className="absolute -bottom-6 -right-6 w-24 md:w-36 rotate-[22deg] text-[#f6e5de]" />
+      <Brilho className="absolute top-6 right-7 w-5 md:w-8 rotate-[22deg] text-[#f6e5de]/40" />
+
+      <div
+        className={`relative flex flex-col gap-3 md:gap-4 p-6 pr-10 md:p-10 lg:p-12 md:pr-16 text-left font-['Poppins','Open_Sans',sans-serif] text-[#f6e5de] ${
+          cheio ? "h-full justify-center" : "pb-8"
+        }`}
+      >
+        <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#f6e5de]/10 px-3 py-1 text-xs md:text-sm font-medium">
+          {balao.icone ? (
+            <img src={balao.icone} alt="" className="h-4 w-4 object-contain invert" />
+          ) : (
+            <span className="font-mono text-[0.95em]">{"</>"}</span>
+          )}
+          {balao.etiqueta}
+        </span>
+
+        <h3 className="text-[1.9rem] md:text-4xl lg:text-5xl font-bold leading-[1.05] tracking-[-0.01em]">
+          {balao.titulo}
+        </h3>
+        <p className="text-lg md:text-xl lg:text-2xl font-medium leading-snug">{balao.subtitulo}</p>
+
+        {balao.paragrafos.map((p) => (
+          <p key={p} className="text-[0.95rem] md:text-base lg:text-lg leading-relaxed text-[#f6e5de]/85">
+            {p}
+          </p>
+        ))}
+
+        <a
+          href="#Contato"
+          className="mt-1 md:mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-[#f6e5de] px-5 py-2.5 text-sm md:text-base font-bold text-[#232440] transition-transform duration-300 hover:scale-105"
+        >
+          Vamos conversar
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  );
+}
 
 function Sobre() {
   const [hoveredSide, setHoveredSide] = useState<Side>(null);
 
-  const interaction = (side: Side) => ({
+  useEffect(() => {
+    const id = "fonte-poppins";
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap";
+    document.head.appendChild(link);
+  }, []);
+
+  const timer = useRef<number | undefined>(undefined);
+
+  const interaction = (side: Exclude<Side, null>, balaoDaCelula: Exclude<Side, null>) => ({
     onPointerEnter: (e: React.PointerEvent) => {
-      if (e.pointerType === "mouse") setHoveredSide(side);
+      if (e.pointerType !== "mouse") return;
+      window.clearTimeout(timer.current);
+      setHoveredSide((prev) => (prev === balaoDaCelula ? prev : side));
     },
     onPointerLeave: (e: React.PointerEvent) => {
-      if (e.pointerType === "mouse") setHoveredSide(null);
+      if (e.pointerType !== "mouse") return;
+      timer.current = window.setTimeout(() => setHoveredSide(null), 200);
     },
     onPointerUp: (e: React.PointerEvent) => {
-      if (e.pointerType === "touch")
-        setHoveredSide((prev) => (prev === side ? null : side));
+      if (e.pointerType !== "touch") return;
+      setHoveredSide((prev) => (prev === balaoDaCelula || prev === side ? null : side));
     },
   });
 
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
   return (
-    <section id="Sobre">
-      {/* Container centralizado */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-0 mx-auto h-220 md:h-120 w-full max-w-6xl px-4 md:px-10 my-10 md:my-16">
+    <section id="Sobre" className="scroll-mt-24 pt-20 pb-4 md:pt-28 md:pb-6">
+      <div className="flex flex-col items-center text-center px-6">
+        <h1 className="mb-1 p-1 font-['Open_Sans'] text-[1.35rem] md:text-[1.75rem] leading-none font-semibold text-[#938e8b]">
+          Sobre nós
+        </h1>
+        <h2 className="font-['Open_Sans'] text-[2.4rem] sm:text-5xl font-bold text-[#232323] leading-[1.15] sm:leading-[1.2]">
+          Dois gatos,
+          <br />
+          um só estúdio.
+        </h2>
+        <p className="mt-4 max-w-[21rem] md:max-w-none font-['Open_Sans'] text-[0.95rem] md:text-[1.0625rem] font-bold leading-[1.6] text-[#938e8b] text-balance">
+          <span className="hidden md:inline">Passe o mouse</span>
+          <span className="md:hidden">Toque</span> em um dos gatos para conhecer cada lado da Luminyn
+        </p>
+      </div>
 
-        <div
-          className="group w-full md:w-1/2 aspect-[4/5] min-h-[28rem] md:min-h-0 relative"
-          {...interaction("right")}
-        >
-          {/* Card — fundo + gato */}
-          <div className="absolute inset-0 bg-[#f0e6df] rounded-xl overflow-hidden flex justify-center items-center transition duration-300 md:group-hover:-translate-y-5">
-            <img
-              className={`absolute h-full w-full object-contain p-8 sm:p-6 md:p-0 rounded-md transition-opacity duration-300 scale-[1.07] ${
-                hoveredSide === "left" ? "opacity-0" : "opacity-100"
-              }`}
-              src="WhiteCat.png"
-              alt="LumCatWhite"
-            />
-          </div>
+      <div className="mx-auto mt-8 md:mt-12 grid w-full max-w-6xl grid-cols-1 md:grid-cols-2 gap-4 md:gap-10 px-4 md:px-10">
+        {gatos.map((g, i) => {
+          const balao = baloes[i];
+          const balaoAberto = hoveredSide === balao.lado;
+          const meuBalaoAberto = hoveredSide === g.aciona;
 
-          {/* Overlay + PERNINHA — um único pai controla a opacidade dos dois */}
-          <div
-            className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300 md:group-hover:-translate-y-5 ${
-              hoveredSide === "left" ? "opacity-100 pointer-events-auto" : "opacity-0"
-            }`}
-          >
-            {/* Conteúdo do overlay */}
-            <div className="absolute inset-0 rounded-xl overflow-hidden">
-              <div className="flex flex-col items-left justify-left w-full h-full p-5 lg:p-8 gap-3 lg:gap-4 text-left overflow-y-auto bg-gradient-to-tl from-[#202336] to-[#3B3B5E]">
-                <h3 className="text-[#dfe3ff] text-xl lg:text-2xl font-bold mb-1 flex items-center gap-2">
-                  <img
-                    src="pincel.png"
-                    alt="Pincel"
-                    className="w-10 h-8 object-contain invert drop-shadow-[0_0_6px_rgba(255,0,0,0.9)]"
-                  />
-                  <span className="text-[#dfe3ff] text-xl lg:text-4xl font-bold mb-2 pl-2 text-shadow-[0_0_6px_rgba(251,191,36,0.6)]">Design Web</span>
-                </h3>
-                <h2 className="text-[#dfe3ff] text-xl lg:text-2xl font-bold mb-1 text-shadow-[2px_2px_4px_black]">  A Arte em cada Pixel</h2>
-                <p className="text-[#dfe3ff] text-sm lg:text-base xl:text-lg font-medium leading-tight">
-                  Criamos identidades visuais autorais, alinhadas ao posicionamento de cada marca e construídas a partir de escolhas visuais que expressam sua personalidade.
-                </p>
-                <p className="text-[#dfe3ff] text-sm lg:text-base xl:text-lg font-medium leading-tight">
-                  De logotipos a materiais digitais e impressos, cada detalhe compõe uma linguagem própria, consistente e reconhecível
-                </p>
-                <p className="text-[#dfe3ff] text-sm lg:text-base xl:text-lg font-bold leading-tight mt-1">
-                  Entre em contato e vamos discutir como posso ajudar a levar seu negócio para o próximo nível!
-                </p>
+          return (
+            <div
+              key={g.img}
+              className="group relative grid md:h-[30rem] lg:h-[34rem] cursor-pointer select-none"
+              {...interaction(g.aciona, balao.lado)}
+            >
+              <div
+                className={`col-start-1 row-start-1 flex min-h-[17rem] sm:min-h-[20rem] flex-col items-center justify-center transition duration-500 ease-out ${
+                  balaoAberto ? "opacity-0 scale-95" : "opacity-100 scale-100"
+                }`}
+              >
+                <img
+                  className={`max-h-[16rem] sm:max-h-[19rem] md:max-h-[80%] w-full object-contain transition-transform duration-500 ease-out
+                              drop-shadow-[0_18px_24px_rgba(35,36,64,0.25)]
+                              ${g.imgClasse}
+                              ${meuBalaoAberto ? `-translate-y-3 ${g.giro}` : `group-hover:-translate-y-3 ${g.giroHover}`}`}
+                  src={g.img}
+                  alt={g.alt}
+                  draggable={false}
+                />
+                <span
+                  className={`mt-4 rounded-full px-4 py-1.5 font-['Poppins','Open_Sans',sans-serif] text-sm font-medium transition-colors duration-300
+                              ${meuBalaoAberto ? "bg-[#232440] text-[#f6e5de]" : "bg-[#232440]/10 text-[#232440]"}`}
+                >
+                  {g.nome}
+                </span>
+              </div>
+
+              <div
+                aria-hidden={!balaoAberto}
+                onPointerUp={(e) => e.stopPropagation()}
+                className={`relative z-10 col-start-1 row-start-1 transition duration-500 ease-out ${
+                  balaoAberto
+                    ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
+                    : "opacity-0 translate-y-3 scale-[0.97] pointer-events-none"
+                }`}
+              >
+                <div className={`absolute bg-[#232440] md:hidden ${balao.setaMobile}`} />
+                <div className={`absolute hidden bg-[#232440] md:block ${balao.setaDesktop}`} />
+                <ConteudoBalao balao={balao} cheio />
               </div>
             </div>
-
-            {/* PERNINHA — irmão do overlay, mesmo pai, mesma opacidade */}
-            <div className="absolute pointer-events-none w-0 h-0
-              -bottom-4 left-1/2 -translate-x-1/2
-              border-l-[16px] border-l-transparent
-              border-r-[16px] border-r-transparent
-              border-t-[20px] border-t-[#272a41]
-              md:bottom-auto md:left-auto md:translate-x-0 md:top-48 md:-right-5
-              md:border-l-[20px] md:border-l-[#272a41]
-              md:border-r-0
-              md:border-t-[16px] md:border-t-transparent
-              md:border-b-[16px] md:border-b-transparent"
-            ></div>
-          </div>
-        </div>
-
-        {/* Gato Azul */}
-        <div
-          className="group w-full md:w-1/2 aspect-[4/5] min-h-[28rem] md:min-h-0 relative"
-          {...interaction("left")}
-        >
-          {/* Card — fundo + gato */}
-          <div className="absolute inset-0 bg-[#f0e6df] rounded-xl overflow-hidden flex justify-center items-center transition duration-300 md:group-hover:-translate-y-5">
-            <img
-              className={`absolute h-full w-full object-contain p-8 sm:p-6 md:p-0 rounded-md transition-opacity duration-300 ${
-                hoveredSide === "right" ? "opacity-0" : "opacity-100"
-              }`}
-              src="white2.png"
-              alt="LumCatBlue"
-            />
-          </div>
-
-          {/* Overlay + PERNINHA — um único pai controla a opacidade dos dois */}
-          <div
-            className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300 md:group-hover:-translate-y-5 ${
-              hoveredSide === "right" ? "opacity-100 pointer-events-auto" : "opacity-0"
-            }`}
-          >
-            {/* Conteúdo do overlay */}
-            <div className="absolute inset-0 rounded-xl overflow-hidden">
-              <div className="flex flex-col items-left justify-start w-full h-full p-5 lg:p-8 gap-3 lg:gap-4 text-left overflow-y-auto bg-gradient-to-bl from-[#202336] to-[#3B3B5E]">
-                <h2 className="text-[#dfe3ff] text-xl lg:text-4xl font-bold mb-2 text-shadow-[0_0_6px_rgba(251,191,36,0.6)]"> {"</ >"} Desenvolvedor Web</h2>
-                <p className="text-[#dfe3ff] text-sm lg:text-base xl:text-xl font-medium leading-tight">
-                  Transforme sua presença online com um site que realmente se destaca. Sou um programador experiente e posso criar um site personalizado que atenda às suas necessidades específicas.
-                </p>
-                <p className="text-[#dfe3ff] text-sm lg:text-base xl:text-xl font-medium leading-tight">
-                  Ofereço design responsivo e moderno, otimização para SEO e integração com redes sociais, além de suporte técnico contínuo.
-                </p>
-                <p className="text-[#dfe3ff] text-sm lg:text-base xl:text-xl font-bold leading-tight mt-1">
-                  Entre em contato e vamos discutir como posso ajudar a levar seu negócio para o próximo nível!
-                </p>
-              </div>
-            </div>
-
-            {/* PERNINHA — irmão do overlay, mesmo pai, mesma opacidade */}
-            <div className="absolute pointer-events-none w-0 h-0
-              -top-4 left-1/2 -translate-x-1/2
-              border-l-[16px] border-l-transparent
-              border-r-[16px] border-r-transparent
-              border-b-[20px] border-b-[#272940]
-              md:bottom-auto md:right-auto md:translate-x-5 md:top-48 md:-left-10
-              md:border-r-[20px] md:border-r-[#333452]
-              md:border-l-0
-              md:border-t-[16px] md:border-t-transparent
-              md:border-b-[16px] md:border-b-transparent"
-            ></div>
-          </div>
-        </div>
-
+          );
+        })}
       </div>
     </section>
   );
