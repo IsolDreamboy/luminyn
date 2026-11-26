@@ -179,8 +179,8 @@ function Servicos() {
       <div
         onMouseEnter={() => setPausado(true)}
         onMouseLeave={() => setPausado(false)}
-        className="relative mt-8 md:mt-12 overflow-hidden
-                   h-[27rem] sm:h-[30rem] md:h-[34rem] lg:h-[38rem]
+        className="relative z-10 mt-8 md:mt-12 overflow-x-clip overflow-y-visible
+                   h-[29rem] sm:h-[32rem] md:h-[36rem] lg:h-[40rem]
                    [--w:15rem] [--g:1rem]
                    sm:[--w:17rem]
                    md:[--w:19rem] md:[--g:1.5rem]
@@ -215,7 +215,15 @@ function Servicos() {
                               : "opacity-0 pointer-events-none"
                           }`}
             >
-              <div className={`absolute inset-0 overflow-hidden rounded-[10cqw] bg-[#232440] ${ativo ? "shadow-xl" : ""}`}>
+              <div
+                className={`absolute inset-0 overflow-hidden rounded-[10cqw] bg-[#232440]
+                            transition-shadow duration-700
+                            ${
+                              ativo
+                                ? "shadow-[0_14px_24px_-6px_rgba(0,0,0,0.5)]"
+                                : "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.35)]"
+                            }`}
+              >
                 <Brilho className="absolute -bottom-[1%] -right-[8%] w-[34%] rotate-[22deg] text-[#f6e5de]" />
                 {s.imagens
                   .filter((img) => !img.topoLivre)
