@@ -17,7 +17,7 @@ function Header(): React.JSX.Element {
     <header className="fixed top-0 left-0 w-full bg-[#f0e6df] z-[1000] shadow-xl shadow-[rgba(0,0,0,0.1)]">
       <nav className="flex items-center px-4 sm:px-6 lg:px-10 py-2">
         <a href="#" className="shrink-0">
-          <img className="h-12 sm:h-16 w-auto rounded-md" src="/CorLogo3.png" alt="Logo" />
+          <img className="h-12 sm:h-16 w-auto rounded-md" src="CorLogo3.png" alt="Logo" />
         </a>
 
         <div className="hidden md:flex flex-1 items-center justify-between ml-10 lg:ml-24">
