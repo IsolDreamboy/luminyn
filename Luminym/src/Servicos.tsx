@@ -4,7 +4,7 @@ type Imagem = {
   src: string;
   alt: string;
   className: string;
-  recortar?: boolean;
+  topoLivre?: boolean;
 };
 
 type Servico = {
@@ -20,14 +20,12 @@ const servicos: Servico[] = [
       {
         src: "cardblue.jpeg",
         alt: "",
-        className: "left-[92cqw] top-[30cqw] w-[55cqw] -rotate-[15deg]",
-        recortar: true,
+        className: "left-[86cqw] top-[36cqw] w-[42cqw] -rotate-[15deg] drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]",
       },
       {
         src: "cardwhite.jpeg",
         alt: "Cartões de visita da Luminyn Studio",
-        className: "left-[80cqw] top-[14cqw] w-[67cqw] -rotate-[25deg]",
-        recortar: true,
+        className: "left-[77cqw] top-[21cqw] w-[57cqw] -rotate-[32deg] drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]",
       },
     ],
     titulo: "Identidade visual e design",
@@ -40,8 +38,7 @@ const servicos: Servico[] = [
       {
         src: "Escrita.png",
         alt: "Caderno da Luminyn Studio com a inscrição Escrita criativa",
-        className: "left-[73cqw] top-[26cqw] w-[150cqw] max-w-none",
-        recortar: true,
+        className: "left-[82cqw] top-[20cqw] w-[175cqw] max-w-none rotate-[5deg] drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]",
       },
     ],
     titulo: "Conteúdo e comunicação",
@@ -54,7 +51,7 @@ const servicos: Servico[] = [
       {
         src: "notev2.png",
         alt: "Notebook exibindo o logo da Luminyn Studio",
-        className: "left-[70cqw] top-[24cqw] w-[170cqw] max-w-none",
+        className: "left-[69cqw] top-[22.5cqw] w-[159.8cqw] max-w-none",
       },
     ],
     titulo: "Site e soluções digitais",
@@ -65,24 +62,7 @@ const servicos: Servico[] = [
 ];
 
 const classeImagem =
-  "absolute h-auto -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]";
-
-function Imagens({ lista }: { lista: Imagem[] }) {
-  return (
-    <>
-      {lista.map((img) => (
-        <img
-          key={img.src}
-          className={`${classeImagem} ${img.className}`}
-          src={img.src}
-          alt={img.alt}
-          decoding="async"
-          draggable={false}
-        />
-      ))}
-    </>
-  );
-}
+  "absolute h-auto -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none";
 
 const n = servicos.length;
 const POSICOES = [-2, -1, 0, 1, 2] as const;
@@ -237,11 +217,33 @@ function Servicos() {
             >
               <div className={`absolute inset-0 overflow-hidden rounded-[10cqw] bg-[#232440] ${ativo ? "shadow-xl" : ""}`}>
                 <Brilho className="absolute -bottom-[1%] -right-[8%] w-[34%] rotate-[22deg] text-[#f6e5de]" />
-                <Imagens lista={s.imagens.filter((i) => i.recortar)} />
+                {s.imagens
+                  .filter((img) => !img.topoLivre)
+                  .map((img) => (
+                    <img
+                      key={img.src}
+                      className={`${classeImagem} ${img.className}`}
+                      src={img.src}
+                      alt={img.alt}
+                      decoding="async"
+                      draggable={false}
+                    />
+                  ))}
               </div>
 
               <div className="pointer-events-none absolute inset-0 z-10">
-                <Imagens lista={s.imagens.filter((i) => !i.recortar)} />
+                {s.imagens
+                  .filter((img) => img.topoLivre)
+                  .map((img) => (
+                    <img
+                      key={img.src}
+                      className={`${classeImagem} ${img.className}`}
+                      src={img.src}
+                      alt={img.alt}
+                      decoding="async"
+                      draggable={false}
+                    />
+                  ))}
               </div>
 
               <div
