@@ -33,7 +33,7 @@ function Sobre() {
               className={`absolute h-full w-full object-contain p-8 sm:p-6 md:p-0 rounded-md transition-opacity duration-300 scale-[1.07] ${
                 hoveredSide === "left" ? "opacity-0" : "opacity-100"
               }`}
-              src="/WhiteCat.png"
+              src="WhiteCat.png"
               alt="LumCatWhite"
             />
           </div>
@@ -94,7 +94,7 @@ function Sobre() {
               className={`absolute h-full w-full object-contain p-8 sm:p-6 md:p-0 rounded-md transition-opacity duration-300 ${
                 hoveredSide === "right" ? "opacity-0" : "opacity-100"
               }`}
-              src="/white2.png"
+              src="white2.png"
               alt="LumCatBlue"
             />
           </div>

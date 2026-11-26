@@ -18,13 +18,13 @@ const servicos: Servico[] = [
   {
     imagens: [
       {
-        src: "/cardblue.jpeg",
+        src: "cardblue.jpeg",
         alt: "",
         className: "left-[92cqw] top-[30cqw] w-[55cqw] -rotate-[15deg]",
         recortar: true,
       },
       {
-        src: "/cardwhite.jpeg",
+        src: "cardwhite.jpeg",
         alt: "Cartões de visita da Luminyn Studio",
         className: "left-[80cqw] top-[14cqw] w-[67cqw] -rotate-[25deg]",
         recortar: true,
@@ -38,7 +38,7 @@ const servicos: Servico[] = [
   {
     imagens: [
       {
-        src: "/Escrita.png",
+        src: "Escrita.png",
         alt: "Caderno da Luminyn Studio com a inscrição Escrita criativa",
         className: "left-[73cqw] top-[26cqw] w-[150cqw] max-w-none",
         recortar: true,
@@ -52,7 +52,7 @@ const servicos: Servico[] = [
   {
     imagens: [
       {
-        src: "/notev2.png",
+        src: "notev2.png",
         alt: "Notebook exibindo o logo da Luminyn Studio",
         className: "left-[70cqw] top-[24cqw] w-[170cqw] max-w-none",
       },
